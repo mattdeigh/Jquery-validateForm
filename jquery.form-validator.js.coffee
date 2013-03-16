@@ -134,8 +134,10 @@
 
     # Hijack the submit form and validate required fields
     self.on "submit", (e) ->
-      e.preventDefault()
       self = $(this)
+      
+      errMsg = $(settings.errorMessageLocation)
+      errMsg.empty().hide()
 
       error = []
 
@@ -149,11 +151,10 @@
       console.log(error)
 
       if error.length > 0
-        errMsg = $(settings.errorMessageLocation)
-        errMsg.empty()
-
         showError err, errMsg for err in error
 
         return false
+
+      return true
 
 ) jQuery
