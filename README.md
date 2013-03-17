@@ -1,10 +1,18 @@
-Jquery-validateForm
+Jquery validateForm Plugin
 ===================
+Designed to be a simple and straight-forward way of adding validation to any form. No stylesheets to add.
 
-Add data-validate to the input field
+## Installation
+
+Include javascript file
+```html
+<script type="text/javascript" href="js/jquery.form-validator.min.js"></script>
+```
+
+Add data-validate to the input fields
 
 ```html
-<input data-validate="string" type="text">
+<input data-validate="string" type="text" />
 ```
 
 Setup validation on the form
