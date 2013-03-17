@@ -13,6 +13,11 @@
       msgInvalidPhone       : false
       msgPhoneMinLength     : false
       msgPhoneMaxLength     : false
+      beforeSetup           : ->
+      afterSetup            : ( _e ) -> 
+      beforeValidate        : ( _e ) -> 
+      afterValidate         : (error) -> 
+      beforeSubmit          : (e) -> 
     , options)
 
     # Set "this" for reference elsewhere
@@ -71,6 +76,7 @@
       err = checkLength _e, true
       return err if err
 
+    # Validates number by removing anything that is not a number 
     validateNumber    = ( _e ) ->
       val     = _e.val()
       match   = /^[0-9a-zA-Z]+$/.test(val)
@@ -82,7 +88,7 @@
           message   : "#{label} must be a number"
 
     checkLength       = ( _e, phone=false ) ->
-      return false if _e.data("required") == false
+      return false if _e.data("required") == false # Stop if required is false. Set as data attribute
 
       length     = _e.val().length
       maxLength  = _e.data("maxlength") || false
@@ -107,7 +113,7 @@
       else
         return false
 
-
+    # Cycle through validation types
     checkType         = ( _e ) ->
       type = _e.data("validate")
 
@@ -125,6 +131,10 @@
 
       message.append("<div>#{err.message}</div>").show()
 
+
+    # Before setup hook
+    settings.beforeSetup()
+    
     # Add default styles to head
     addStyles()
 
@@ -132,8 +142,12 @@
     self.find("[data-validate]").each ->
       placeRequired $(this)
 
+    # After setup hook
+    settings.afterSetup( self.find("[data-validate]") )
+
     # Hijack the submit form and validate required fields
     self.on "submit", (e) ->
+      e.preventDefault()
       self = $(this)
       
       errMsg = $(settings.errorMessageLocation)
@@ -142,19 +156,23 @@
       error = []
 
       self.find("[data-validate]").each ->
+
+        settings.beforeValidate( $(this) )
+        
         $(this).removeClass "validation-error"
         $(this).prevAll( settings.requiredLocation ).removeClass "validation-error"
 
         res = checkType( $(this) )
         error.push res if res
 
-      console.log(error)
+      settings.afterValidate( error )
 
       if error.length > 0
         showError err, errMsg for err in error
 
         return false
 
+      settings.beforeSubmit( e )
       return true
 
 ) jQuery
