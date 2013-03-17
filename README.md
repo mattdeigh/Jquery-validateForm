@@ -1,6 +1,8 @@
 Jquery validateForm Plugin
 ===================
 Designed to be a simple and straight-forward way of adding validation to any form. No stylesheets to add.
+Set ```data-validate="string"``` on an input element and call ```$("form").validateForm();``` and the plugin will do the rest.
+Once the plugin is initiated, a required mark will be added to the closest label tag traversing upwards from the input. Any errors will be added to a div with the class ".error-message". The location of the error message can be changed in the options.
 
 ## Installation
 
@@ -56,7 +58,7 @@ data-label
 
 showRequired
 ```javascript
-// Set mark used to display required fields
+// Set mark used to display required fields. It also excepts false.
 $("form").validateForm({
   showRequired: " * " // Default: "<span style=\"color:#CB4721;\"> *</span>"
 });
