@@ -64,6 +64,7 @@
           element   : _e
           message   : if settings.msgCheckBox then settings.msgCheckBox else "#{label} must be checked"
 
+    # TODO - Make this work. Automatically check for password complexity, and validate repeat password
     validatePassword  = ( _e ) ->
       err = checkLength _e
       return err if err
@@ -75,6 +76,17 @@
 
       err = checkLength _e, true
       return err if err
+
+    validateRadio     = ( _e ) ->
+      name  = _e.attr('name')
+      count = $("[name='#{name}']:checked").size()
+      label   = getLabel( _e )
+
+      unless count != 0
+        err =
+          element   : _e
+          message   : if settings.msgCheckBox then settings.msgCheckBox else "Must select one for #{label}"
+
 
     # Validates number by removing anything that is not a number 
     validateNumber    = ( _e ) ->
@@ -124,6 +136,7 @@
         when "check_box"  then validateCheckBox _e
         when "password"   then validatePassword _e
         when "phone"      then validatePhone    _e
+        when "radio"      then validateRadio    _e
 
     showError         = ( err, message ) ->
       err.element.addClass "validation-error"
